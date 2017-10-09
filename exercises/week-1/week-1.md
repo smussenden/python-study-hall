@@ -58,4 +58,6 @@ Your editor has assigned you to do a story about visitation at the nation's Nati
 1. What was the mean number of visits at all National Parks in 2016?
 2. What was the mean number of visits at the most popular National Parks, with more than 5 million visitors, in 2016?
 
-To get started, download the 
+To get started, download the ZIP file, national-park.zip, and put it on your Desktop.  In Spyder, open the file national-park.py.  Run the first 16 lines to load numpy, load pandas, read in the data, and transform the column we care about into a numpy array. Then, find the answers to the two questions.  
+
+If you get stuck, the file national-park-answers.py has answers. 
