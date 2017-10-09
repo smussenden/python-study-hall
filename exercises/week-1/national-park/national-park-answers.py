@@ -16,6 +16,11 @@ parks_visits_array = parks_visits.values
 print(parks_visits_array)
 
 # Calculate the mean. 
-
+parks_visits_mean = np.mean(parks_visits_array)
+print(parks_visits_mean)
 
 # Calculate the mean for the largest parks
+parks_visits_xl = parks_visits_array[parks_visits_array > 5000000]
+
+parks_visits_xl_mean = np.mean(parks_visits_xl)
+print(parks_visits_xl_mean)
