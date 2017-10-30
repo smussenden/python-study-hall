@@ -1,6 +1,6 @@
 # Merrill Python Data Study Hall
 
-This is the git repo for Merrill Python Data Study Hall.  
+This is the git repo for Merrill Python Data Study Hall...  
 
 Here, you'll find:
 
