@@ -114,17 +114,46 @@ orgotpct = ( salary
 
 import matplotlib.pyplot as plt
 
-import matplotlib.pyplot as plt
-plt.bar(orgotpct['organization'], orgotpct['ot_pct'])
-plt.show() # Depending on whether you use IPython or interactive mode, etc.
+ot_top = orgotpct.head(10)
+ot_bar = plt.bar(range(len(ot_top['ot_pct'])),ot_top['ot_pct'])
+plt.xticks(range(len(ot_top['ot_pct'])), ot_top.index.values, rotation=90)
 
+# Question 16: Examine the relationship between the highest salary for each organization, and the number of employees.
 
-ax = df[['V1','V2']].plot(kind='bar', title ="V comp", figsize=(15, 10), legend=True, fontsize=12)
-What you tried was df['V1','V2'] this will raise a KeyError as correctly no column exists with that label, although it looks funny at first you have to consider that your are passing a list hence the double square brackets [[]].
+# First, create a separate dataframe that lists max salary for each organization
 
-import matplotlib.pyplot as plt
+max_salary = ( salary
+        .groupby('organization')['organization', 'ytd_gross_earnings']
+        .agg('max')
+        .rename(columns={'ytd_gross_earnings' : 'ytd_gross_max'})
+        )
 
-ax = organization_ot_pct[['organization','ot_pct']].plot(kind='bar', title ="V comp", figsize=(15, 10), legend=True, fontsize=12)
-ax.set_xlabel("Hour", fontsize=12)
-ax.set_ylabel("V", fontsize=12)
+# Then, create a separate dataframe that lists a count of employees for each orgnization.
+num_employees = (salary
+        .groupby('organization')['organization','ytd_gross_earnings']
+        .agg('count')  
+        .rename(columns={'ytd_gross_earnings' : 'employee_count'})
+        )
+
+# Join the two data frames back together
+scatter_data = pd.merge(max_salary, num_employees, left_index=True, right_index=True)
+
+# Select just the columns we want to keep.
+
+scatter_data_final = scatter_data[['organization_x','ytd_gross_max','employee_count']]
+
+# Plot it. 
+
+plt.scatter(scatter_data_final['ytd_gross_max'], scatter_data_final['employee_count'])
 plt.show()
+
+# Note that the University of Maryland is totally skewing the data.  So remove that.
+scatter_data_noumd = scatter_data.drop(['UNIVERSITY OF MARYLAND'])
+
+# Plot it again
+            
+plt.scatter(scatter_data_noumd['ytd_gross_max'], scatter_data_noumd['employee_count'])
+plt.show()
+
+# Looks like some correlation.  Check it by plotting a correlation matrix. A strong correlation between agency size and highest paid people.
+scatter_data_final.corr()

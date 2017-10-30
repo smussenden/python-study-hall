@@ -99,13 +99,52 @@ organizationcount = salary['organization'].value_counts()
 # Question 13: What other questions can you come up with to ask of this data?
 
 # WEEK 3 STARTS HERE
+
+# Question 16: Look at the list of organizations from last week. Is there anything that might make it difficult to compare organizations? [Answer: Same organizations are spelled different ways]. Can you fix this?
+
+organizations = ( salary
+    .groupby('organization')['organization', 'ytd_gross_earnings']
+    .agg('count')
+    .sort_index()
+     )
+
+
+ Dept of Environment
+ Dept of Agriculture
+ Dept of Labor Licensing and Regulation vs Labor Licensing and Regulation
+ Housing and Community Development
+ Comptroller of Treasurvy v Comptroller of Maryland
+ Dept of Pub Safety
+ Executive Department 
+ Higher  Education 
+ Natural Resources
+ 
+Q22015$member_type[Q22015$member_type ==“Member”] <- “Registered”
+
+
 # Question 14: Which organization is using overtime more than any other department, as measured by percentage of total YTD earnings.  Dept. of Public Services.
+
+orgotpct = ( salary
+        .groupby('organization')['organization', 'ytd_gross_earnings','overtime_earnings']
+        .agg('sum')
+        .assign( ot_pct = lambda salary:  (salary.overtime_earnings/salary.ytd_gross_earnings)*100)
+        .sort_values(by='ot_pct', axis=0, ascending=False)
+        )
 
 # Question 15: Plot the top 10 organizations, as measured by percentage of OT, using an appropriate chart type.
 #https://github.com/juliangaal/python-cheat-sheet/blob/master/Matplotlib/Matplotlib.md
 #https://s3.amazonaws.com/assets.datacamp.com/blog_assets/Python_Matplotlib_Cheat_Sheet.pdf
 
-# Question 16: Look at the list of organizations from last week. Is there anything that might make it difficult to compare organizations? [Answer: Same organizations are spelled different ways]. Can you fix this?
+import matplotlib.pyplot as plt
+
+ot_top = orgotpct.head(10)
+ot_bar = plt.bar(range(len(ot_top['ot_pct'])),ot_top['ot_pct'])
+plt.xticks(range(len(ot_top['ot_pct'])), ot_top.index.values, rotation=90)
+plt.show()
+
+
+
+
 # Question 17 -- in three parts:
 # * What is the average salary for each organization?
 # * Use an if statement to group the organizations into two buckets: high-paying ones (over a certain threshold you can pick) and low-paying ones.
